@@ -1,0 +1,71 @@
+<mat-card
+    class="tarea-card"
+    [class.tarea-completada]="isCompletada"
+    [class.tarea-clickable]="config.clickable"
+    (click)="onCardClick()"
+    role="article"
+    [attr.aria-label]="'Tarea: ' + tarea.titulo"
+>
+    <mat-card-header class="tarea-card-header">
+        <div class="tarea-checkbox" *ngIf="config.showEstadoCheckbox">
+            <mat-checkbox
+                [checked]="isCompletada"
+                (click)="onToggleEstado($event)"
+                [attr.aria-label]="
+                    isCompletada
+                        ? 'Marcar como pendiente'
+                        : 'Marcar como completada'
+                "
+                color="primary"
+            ></mat-checkbox>
+        </div>
+        <mat-card-title class="tarea-title" [class.text-line-through]="isCompletada">
+            {{ tarea.titulo }}
+        </mat-card-title>
+        <div class="tarea-actions">
+            <button
+                *ngIf="config.showEditButton"
+                mat-icon-button
+                (click)="onEdit($event)"
+                matTooltip="Editar tarea"
+                aria-label="Editar tarea"
+                color="primary"
+            >
+                <mat-icon>edit</mat-icon>
+            </button>
+            <button
+                *ngIf="config.showDeleteButton"
+                mat-icon-button
+                (click)="onDelete($event)"
+                matTooltip="Eliminar tarea"
+                aria-label="Eliminar tarea"
+                color="warn"
+            >
+                <mat-icon>delete</mat-icon>
+            </button>
+        </div>
+    </mat-card-header>
+
+    <mat-card-content class="tarea-card-content">
+        <p class="tarea-descripcion" [class.text-muted]="isCompletada">
+            {{ tarea.descripcion }}
+        </p>
+        <div class="tarea-metadata">
+            <span class="tarea-fecha" aria-label="Fecha de creación">
+                <mat-icon class="metadata-icon">calendar_today</mat-icon>
+                {{ fechaFormateada }}
+            </span>
+            <span
+                class="tarea-estado-badge"
+                [class.badge-completada]="isCompletada"
+                [class.badge-pendiente]="!isCompletada"
+                [attr.aria-label]="'Estado: ' + (isCompletada ? 'Completada' : 'Pendiente')"
+            >
+                <mat-icon class="badge-icon">
+                    {{ isCompletada ? 'check_circle' : 'radio_button_unchecked' }}
+                </mat-icon>
+                {{ isCompletada ? 'Completada' : 'Pendiente' }}
+            </span>
+        </div>
+    </mat-card-content>
+</mat-card>

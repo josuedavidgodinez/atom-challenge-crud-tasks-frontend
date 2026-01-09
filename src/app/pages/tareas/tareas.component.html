@@ -5,20 +5,58 @@
             <div class="col-12">
                 <div class="tareas-header">
                     <div class="header-content">
-                        <div>
-                            <h1 class="page-title">Listado de Tareas</h1>
+                        <div class="header-info">
+                            <h1 class="page-title">Mis Tareas</h1>
                             <p class="user-info" *ngIf="usuario">
-                                Usuario: <strong>{{ usuario.correo }}</strong>
+                                <mat-icon class="user-icon">account_circle</mat-icon>
+                                {{ usuario.correo }}
                             </p>
                         </div>
-                        <button
-                            mat-raised-button
-                            color="warn"
-                            (click)="onLogout()"
-                            aria-label="Cerrar sesión"
-                        >
-                            Cerrar Sesión
-                        </button>
+                        <div class="header-actions">
+                            <button
+                                mat-raised-button
+                                color="primary"
+                                (click)="onCreateTarea()"
+                                aria-label="Crear nueva tarea"
+                            >
+                                <mat-icon>add</mat-icon>
+                                Nueva Tarea
+                            </button>
+                            <button
+                                mat-stroked-button
+                                color="warn"
+                                (click)="onLogout()"
+                                aria-label="Cerrar sesión"
+                            >
+                                <mat-icon>logout</mat-icon>
+                                Cerrar Sesión
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="stats-container" *ngIf="!loading && tareas.length > 0">
+                        <div class="stat-item">
+                            <mat-icon class="stat-icon">assignment</mat-icon>
+                            <div class="stat-content">
+                                <span class="stat-value">{{ tareas.length }}</span>
+                                <span class="stat-label">Total</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <mat-icon class="stat-icon stat-icon-warning">pending_actions</mat-icon>
+                            <div class="stat-content">
+                                <span class="stat-value">{{ tareasPendientes }}</span>
+                                <span class="stat-label">Pendientes</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <mat-icon class="stat-icon stat-icon-success">check_circle</mat-icon>
+                            <div class="stat-content">
+                                <span class="stat-value">{{ tareasCompletadas }}</span>
+                                <span class="stat-label">Completadas</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -39,52 +77,53 @@
         <div *ngIf="errorMessage && !loading" class="row">
             <div class="col-12">
                 <div class="alert alert-danger" role="alert" aria-live="polite">
-                    <span class="alert-icon" aria-hidden="true">⚠️</span>
-                    {{ errorMessage }}
+                    <mat-icon class="alert-icon">error</mat-icon>
+                    <span class="alert-message">{{ errorMessage }}</span>
                     <button
                         mat-button
                         (click)="loadTareas()"
                         class="retry-button"
                         aria-label="Reintentar carga de tareas"
                     >
+                        <mat-icon>refresh</mat-icon>
                         Reintentar
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Tareas List (JSON format) -->
-        <div *ngIf="!loading && !errorMessage" class="row">
+        <!-- Empty State -->
+        <div *ngIf="!loading && !errorMessage && tareas.length === 0" class="row">
             <div class="col-12">
-                <div class="tareas-content">
-                    <!-- Empty State -->
-                    <div *ngIf="tareas.length === 0" class="empty-state">
-                        <p class="text-muted">No hay tareas para mostrar</p>
-                    </div>
+                <div class="empty-state">
+                    <mat-icon class="empty-icon">assignment_late</mat-icon>
+                    <h2 class="empty-title">No tienes tareas</h2>
+                    <p class="empty-message">
+                        Crea tu primera tarea para comenzar a organizarte
+                    </p>
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        (click)="onCreateTarea()"
+                        aria-label="Crear primera tarea"
+                    >
+                        <mat-icon>add</mat-icon>
+                        Crear Tarea
+                    </button>
+                </div>
+            </div>
+        </div>
 
-                    <!-- Tareas List -->
-                    <div *ngIf="tareas.length > 0" class="tareas-list">
-                        <h2 class="list-title">
-                            Tareas ({{ tareas.length }})
-                        </h2>
-                        <div
-                            *ngFor="let tarea of tareas; index as i"
-                            class="tarea-item"
-                            [attr.aria-label]="'Tarea ' + (i + 1)"
-                        >
-                            <div class="tarea-header">
-                                <span class="tarea-number">#{{ i + 1 }}</span>
-                                <span
-                                    class="tarea-estado"
-                                    [class.estado-pendiente]="tarea.estado === 'P'"
-                                    [class.estado-completada]="tarea.estado === 'C'"
-                                >
-                                    {{ tarea.estado === 'P' ? 'Pendiente' : 'Completada' }}
-                                </span>
-                            </div>
-                            <pre class="tarea-json">{{ toJSON(tarea) }}</pre>
-                        </div>
-                    </div>
+        <!-- Tareas List -->
+        <div *ngIf="!loading && !errorMessage && tareas.length > 0" class="row">
+            <div class="col-12">
+                <div class="tareas-grid">
+                    <app-tarea-card
+                        *ngFor="let tarea of tareas; trackBy: trackByTareaId"
+                        [tarea]="tarea"
+                        (tareaEvent)="onTareaEvent($event)"
+                        [attr.data-tarea-id]="tarea.id"
+                    ></app-tarea-card>
                 </div>
             </div>
         </div>

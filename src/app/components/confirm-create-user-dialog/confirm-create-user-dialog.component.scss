@@ -1,0 +1,39 @@
+@import "../../../assets/styles/variables";
+
+.confirm-dialog {
+    padding: 0;
+
+    .dialog-message {
+        margin-bottom: $spacing-md;
+        font-size: $font-size-body;
+        color: $text-primary;
+    }
+
+    .dialog-question {
+        margin-bottom: 0;
+        font-size: $font-size-body;
+        font-weight: $font-weight-medium;
+        color: $text-primary;
+    }
+
+    .dialog-actions {
+        margin-top: $spacing-lg;
+        padding: 0;
+    }
+
+    .cancel-button,
+    .confirm-button {
+        min-width: 100px;
+    }
+
+    strong {
+        color: $primary-color;
+        font-weight: $font-weight-semibold;
+    }
+
+    // Accessibility
+    button:focus-visible {
+        outline: 2px solid $primary-color;
+        outline-offset: 2px;
+    }
+}

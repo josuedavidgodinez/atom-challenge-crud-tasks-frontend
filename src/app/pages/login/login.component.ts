@@ -14,8 +14,9 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { Router } from "@angular/router";
 import { Subject, takeUntil } from "rxjs";
 
+import { ConfirmCreateUserDialogComponent }
+    from "../../components/confirm-create-user-dialog/confirm-create-user-dialog.component";
 import { AuthService } from "../../core/services/auth.service";
-import { ConfirmCreateUserDialogComponent } from "./confirm-create-user-dialog.component";
 
 /**
  * Componente de Login

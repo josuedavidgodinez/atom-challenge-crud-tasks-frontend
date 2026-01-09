@@ -3,150 +3,232 @@
 .tareas-container {
     min-height: 100vh;
     background-color: $background-light;
-    padding: $spacing-lg $spacing-md;
+    padding: $spacing-md 0;
 
-    @include responsive(md) {
-        padding: $spacing-xl $spacing-lg;
+    .tareas-header {
+        background-color: $white-color;
+        border-radius: $border-radius;
+        box-shadow: $box-shadow;
+        padding: $spacing-lg;
+        margin-bottom: $spacing-lg;
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: $spacing-md;
+            flex-wrap: wrap;
+
+            .header-info {
+                flex: 1;
+                min-width: 200px;
+
+                .page-title {
+                    font-size: $font-size-h2;
+                    font-weight: $font-weight-bold;
+                    color: $text-primary;
+                    margin: 0 0 $spacing-sm;
+                }
+
+                .user-info {
+                    display: flex;
+                    align-items: center;
+                    gap: $spacing-xs;
+                    font-size: $font-size-small;
+                    color: $text-secondary;
+                    margin: 0;
+
+                    .user-icon {
+                        font-size: 1.25rem;
+                        width: 1.25rem;
+                        height: 1.25rem;
+                    }
+                }
+            }
+
+            .header-actions {
+                display: flex;
+                gap: $spacing-sm;
+                flex-wrap: wrap;
+            }
+        }
+
+        .stats-container {
+            display: flex;
+            gap: $spacing-md;
+            margin-top: $spacing-lg;
+            flex-wrap: wrap;
+
+            .stat-item {
+                display: flex;
+                align-items: center;
+                gap: $spacing-sm;
+                padding: $spacing-md;
+                background-color: $background-light;
+                border-radius: $border-radius;
+                flex: 1;
+                min-width: 150px;
+
+                .stat-icon {
+                    font-size: 2rem;
+                    width: 2rem;
+                    height: 2rem;
+                    color: $primary-color;
+
+                    &.stat-icon-warning {
+                        color: $warning-color;
+                    }
+
+                    &.stat-icon-success {
+                        color: $success-color;
+                    }
+                }
+
+                .stat-content {
+                    display: flex;
+                    flex-direction: column;
+
+                    .stat-value {
+                        font-size: $font-size-h3;
+                        font-weight: $font-weight-bold;
+                        color: $text-primary;
+                        line-height: 1;
+                    }
+
+                    .stat-label {
+                        font-size: $font-size-small;
+                        color: $text-secondary;
+                        margin-top: 0.25rem;
+                    }
+                }
+            }
+        }
+    }
+
+    .alert {
+        display: flex;
+        align-items: center;
+        gap: $spacing-sm;
+        padding: $spacing-md;
+        border-radius: $border-radius;
+        background-color: $danger-light;
+        color: $danger-dark;
+        border: $border-width solid $danger-color;
+
+        .alert-icon {
+            flex-shrink: 0;
+            color: $danger-color;
+        }
+
+        .alert-message {
+            flex: 1;
+        }
+
+        .retry-button {
+            flex-shrink: 0;
+        }
+    }
+
+    .empty-state {
+        @include flex-center;
+        flex-direction: column;
+        padding: $spacing-xxl $spacing-lg;
+        background-color: $white-color;
+        border-radius: $border-radius;
+        box-shadow: $box-shadow-sm;
+        text-align: center;
+
+        .empty-icon {
+            font-size: 4rem;
+            width: 4rem;
+            height: 4rem;
+            color: $text-muted;
+            margin-bottom: $spacing-md;
+        }
+
+        .empty-title {
+            font-size: $font-size-h3;
+            font-weight: $font-weight-semibold;
+            color: $text-primary;
+            margin: 0 0 $spacing-sm;
+        }
+
+        .empty-message {
+            font-size: $font-size-body;
+            color: $text-secondary;
+            margin: 0 0 $spacing-lg;
+        }
+    }
+
+    .tareas-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: $spacing-md;
     }
 }
 
-.tareas-header,
-.tareas-content {
-    background-color: $white-color;
-    border-radius: $border-radius;
-    box-shadow: $box-shadow;
-    padding: $spacing-lg;
+// Estilos para SnackBar
+::ng-deep {
+    .snackbar-success {
+        background-color: $success-color !important;
+        color: $white-color !important;
+    }
 
-    @include responsive(md) {
-        padding: $spacing-xl;
+    .snackbar-error {
+        background-color: $danger-color !important;
+        color: $white-color !important;
+    }
+
+    .snackbar-info {
+        background-color: $info-color !important;
+        color: $white-color !important;
     }
 }
 
-.tareas-header {
-    margin-bottom: $spacing-xl;
-}
+// Responsive
+@include responsive(xs) {
+    .tareas-container {
+        padding: $spacing-sm 0;
 
-.header-content {
-    @include flex-center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: $spacing-md;
-}
+        .tareas-header {
+            padding: $spacing-md;
 
-.page-title {
-    font-size: $font-size-h3;
-    font-weight: $font-weight-bold;
-    color: $text-primary;
-    margin-bottom: $spacing-xs;
+            .header-content {
+                .header-info .page-title {
+                    font-size: $font-size-h3;
+                }
 
-    @include responsive(md) {
-        font-size: $font-size-h2;
+                .header-actions {
+                    width: 100%;
+
+                    button {
+                        flex: 1;
+                    }
+                }
+            }
+
+            .stats-container {
+                .stat-item {
+                    min-width: 100%;
+                }
+            }
+        }
+
+        .tareas-grid {
+            grid-template-columns: 1fr;
+            gap: $spacing-sm;
+        }
     }
 }
 
-.user-info {
-    font-size: $font-size-small;
-    color: $text-secondary;
-    margin-bottom: 0;
-
-    strong {
-        color: $primary-color;
-        font-weight: $font-weight-semibold;
+@include responsive(sm) {
+    .tareas-container .tareas-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     }
 }
 
-.empty-state {
-    text-align: center;
-    padding: $spacing-xxl;
-}
-
-.list-title {
-    font-size: $font-size-h4;
-    font-weight: $font-weight-semibold;
-    color: $text-primary;
-    margin-bottom: $spacing-lg;
-    padding-bottom: $spacing-md;
-    border-bottom: 2px solid $background-light;
-}
-
-.tareas-list {
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-md;
-}
-
-.tarea-item {
-    background-color: $background-light;
-    border: 1px solid darken($background-light, 5%);
-    border-radius: $border-radius;
-    padding: $spacing-md;
-    transition: border-color 0.2s;
-
-    &:hover {
-        border-color: $primary-color;
+@include responsive(md) {
+    .tareas-container .tareas-grid {
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     }
-}
-
-.tarea-header {
-    @include flex-center;
-    justify-content: space-between;
-    margin-bottom: $spacing-sm;
-    padding-bottom: $spacing-sm;
-    border-bottom: 1px solid darken($background-light, 5%);
-}
-
-.tarea-number {
-    font-size: $font-size-small;
-    font-weight: $font-weight-bold;
-    color: $text-secondary;
-}
-
-.tarea-estado {
-    font-size: $font-size-small;
-    font-weight: $font-weight-medium;
-    padding: $spacing-xs $spacing-sm;
-    border-radius: $border-radius;
-    text-transform: uppercase;
-
-    &.estado-pendiente {
-        background-color: lighten($warning-color, 35%);
-        color: darken($warning-color, 10%);
-    }
-
-    &.estado-completada {
-        background-color: lighten($success-color, 35%);
-        color: darken($success-color, 10%);
-    }
-}
-
-.tarea-json {
-    background-color: $white-color;
-    border: 1px solid darken($background-light, 10%);
-    border-radius: $border-radius;
-    padding: $spacing-md;
-    margin: 0;
-    font-size: $font-size-small;
-    font-family: monospace;
-    color: $text-primary;
-    overflow-x: auto;
-    white-space: pre-wrap;
-}
-
-.alert {
-    margin-bottom: $spacing-md;
-    padding: $spacing-md;
-    border-radius: $border-radius;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: $spacing-sm;
-}
-
-.alert-icon {
-    margin-right: $spacing-xs;
-}
-
-.retry-button {
-    margin-left: $spacing-md;
 }
