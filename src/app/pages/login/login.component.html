@@ -1,0 +1,87 @@
+<div class="login-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+                <div class="login-card">
+                    <!-- Header -->
+                    <div class="login-header">
+                        <h1 id="login-title" class="login-title">
+                            Iniciar Sesión
+                        </h1>
+                        <p class="login-subtitle">
+                            Ingresa tu correo electrónico para continuar
+                        </p>
+                    </div>
+
+                    <!-- Form -->
+                    <form
+                        [formGroup]="loginForm"
+                        (ngSubmit)="onSubmit()"
+                        aria-labelledby="login-title"
+                        novalidate
+                    >
+                        <!-- Email Field -->
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Correo Electrónico</mat-label>
+                            <input
+                                matInput
+                                type="email"
+                                formControlName="correo"
+                                placeholder="ejemplo@correo.com"
+                                autocomplete="email"
+                                aria-required="true"
+                                aria-describedby="email-error"
+                                [attr.aria-invalid]="hasError('correo')"
+                            />
+                            <mat-error
+                                id="email-error"
+                                *ngIf="hasError('correo')"
+                                role="alert"
+                            >
+                                {{ getErrorMessage('correo') }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <!-- Error Message -->
+                        <div
+                            *ngIf="errorMessage"
+                            class="alert alert-danger"
+                            role="alert"
+                            aria-live="polite"
+                        >
+                            <span class="alert-icon" aria-hidden="true">⚠️</span>
+                            {{ errorMessage }}
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button
+                            mat-raised-button
+                            color="primary"
+                            type="submit"
+                            class="w-100 submit-button"
+                            [disabled]="loading"
+                            aria-label="Iniciar sesión"
+                        >
+                            <span *ngIf="!loading">Iniciar Sesión</span>
+                            <span *ngIf="loading" class="d-flex align-items-center justify-content-center">
+                                <mat-spinner
+                                    diameter="20"
+                                    class="me-2"
+                                    aria-label="Cargando..."
+                                ></mat-spinner>
+                                Cargando...
+                            </span>
+                        </button>
+                    </form>
+
+                    <!-- Footer -->
+                    <div class="login-footer">
+                        <p class="text-muted small">
+                            Si no tienes cuenta, se te pedirá confirmar la creación
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

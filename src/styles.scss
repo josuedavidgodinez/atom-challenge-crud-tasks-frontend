@@ -1,4 +1,37 @@
 @import "assets/styles/theme";
+@import "assets/styles/variables";
+@import "bootstrap/scss/bootstrap";
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Inter, "Helvetica Neue", sans-serif; }
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: $font-family-base;
+    background-color: $light-color;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+// Utilidades de accesibilidad
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+// Focus visible para accesibilidad
+*:focus-visible {
+    outline: 2px solid $primary-color;
+    outline-offset: 2px;
+}

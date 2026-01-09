@@ -1,21 +1,31 @@
+import { environment } from "../../../environments/environment";
+
 /**
- * URLs de los endpoints del API
- * Desplegados en Google Cloud Run
+ * URLs de los endpoints de las cloud functions
  */
 export const API_ENDPOINTS = {
-    CREAR_USUARIO: "https://crearusuario-dpnddtqc3a-uc.a.run.app",
-    LOGIN_USUARIO: "https://loginusuario-dpnddtqc3a-uc.a.run.app",
-    CREAR_TAREA: "https://creartarea-dpnddtqc3a-uc.a.run.app",
-    OBTENER_TAREAS: "https://obtenertareasporusuario-dpnddtqc3a-uc.a.run.app",
-    ACTUALIZAR_TAREA: "https://actualizartarea-dpnddtqc3a-uc.a.run.app",
-    ELIMINAR_TAREA: "https://eliminartarea-dpnddtqc3a-uc.a.run.app"
+    CREAR_USUARIO: environment.apiEndpoints.crearUsuario,
+    LOGIN_USUARIO: environment.apiEndpoints.loginUsuario,
+    CREAR_TAREA: environment.apiEndpoints.crearTarea,
+    OBTENER_TAREAS: environment.apiEndpoints.obtenerTareas,
+    ACTUALIZAR_TAREA: environment.apiEndpoints.actualizarTarea,
+    ELIMINAR_TAREA: environment.apiEndpoints.eliminarTarea
+} as const;
+
+/**
+ * Configuración de Firebase
+ */
+export const FIREBASE_CONFIG = {
+    API_KEY: environment.firebase.apiKey,
+    SIGN_IN_WITH_CUSTOM_TOKEN_URL: environment.firebase.signInWithCustomTokenUrl
 } as const;
 
 /**
  * Keys para SessionStorage
  */
 export const STORAGE_KEYS = {
-    AUTH_TOKEN: "auth_token"
+    AUTH_TOKEN: "auth_token",
+    USER_DATA: "user_data"
 } as const;
 
 /**

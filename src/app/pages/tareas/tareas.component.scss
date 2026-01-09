@@ -1,0 +1,152 @@
+@import "../../../assets/styles/variables";
+
+.tareas-container {
+    min-height: 100vh;
+    background-color: $background-light;
+    padding: $spacing-lg $spacing-md;
+
+    @include responsive(md) {
+        padding: $spacing-xl $spacing-lg;
+    }
+}
+
+.tareas-header,
+.tareas-content {
+    background-color: $white-color;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+    padding: $spacing-lg;
+
+    @include responsive(md) {
+        padding: $spacing-xl;
+    }
+}
+
+.tareas-header {
+    margin-bottom: $spacing-xl;
+}
+
+.header-content {
+    @include flex-center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: $spacing-md;
+}
+
+.page-title {
+    font-size: $font-size-h3;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
+    margin-bottom: $spacing-xs;
+
+    @include responsive(md) {
+        font-size: $font-size-h2;
+    }
+}
+
+.user-info {
+    font-size: $font-size-small;
+    color: $text-secondary;
+    margin-bottom: 0;
+
+    strong {
+        color: $primary-color;
+        font-weight: $font-weight-semibold;
+    }
+}
+
+.empty-state {
+    text-align: center;
+    padding: $spacing-xxl;
+}
+
+.list-title {
+    font-size: $font-size-h4;
+    font-weight: $font-weight-semibold;
+    color: $text-primary;
+    margin-bottom: $spacing-lg;
+    padding-bottom: $spacing-md;
+    border-bottom: 2px solid $background-light;
+}
+
+.tareas-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+}
+
+.tarea-item {
+    background-color: $background-light;
+    border: 1px solid darken($background-light, 5%);
+    border-radius: $border-radius;
+    padding: $spacing-md;
+    transition: border-color 0.2s;
+
+    &:hover {
+        border-color: $primary-color;
+    }
+}
+
+.tarea-header {
+    @include flex-center;
+    justify-content: space-between;
+    margin-bottom: $spacing-sm;
+    padding-bottom: $spacing-sm;
+    border-bottom: 1px solid darken($background-light, 5%);
+}
+
+.tarea-number {
+    font-size: $font-size-small;
+    font-weight: $font-weight-bold;
+    color: $text-secondary;
+}
+
+.tarea-estado {
+    font-size: $font-size-small;
+    font-weight: $font-weight-medium;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $border-radius;
+    text-transform: uppercase;
+
+    &.estado-pendiente {
+        background-color: lighten($warning-color, 35%);
+        color: darken($warning-color, 10%);
+    }
+
+    &.estado-completada {
+        background-color: lighten($success-color, 35%);
+        color: darken($success-color, 10%);
+    }
+}
+
+.tarea-json {
+    background-color: $white-color;
+    border: 1px solid darken($background-light, 10%);
+    border-radius: $border-radius;
+    padding: $spacing-md;
+    margin: 0;
+    font-size: $font-size-small;
+    font-family: monospace;
+    color: $text-primary;
+    overflow-x: auto;
+    white-space: pre-wrap;
+}
+
+.alert {
+    margin-bottom: $spacing-md;
+    padding: $spacing-md;
+    border-radius: $border-radius;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+}
+
+.alert-icon {
+    margin-right: $spacing-xs;
+}
+
+.retry-button {
+    margin-left: $spacing-md;
+}

@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { catchError } from "rxjs/operators";
@@ -28,10 +28,6 @@ import { handleHttpError } from "../utils/error.utils";
     providedIn: "root"
 })
 export class TareasService {
-    private readonly headers = new HttpHeaders({
-        "Content-Type": "application/json"
-    });
-
     constructor(
         private readonly http: HttpClient
     ) { }
@@ -45,8 +41,7 @@ export class TareasService {
     crearTarea(tarea: CrearTareaRequest): Observable<ApiResponse> {
         return this.http.post<ApiResponse>(
             API_ENDPOINTS.CREAR_TAREA,
-            tarea,
-            { headers: this.headers }
+            tarea
         ).pipe(
             catchError((error) => handleHttpError(error))
         );
@@ -59,8 +54,7 @@ export class TareasService {
      */
     obtenerTareas(): Observable<ObtenerTareasResponse> {
         return this.http.get<ObtenerTareasResponse>(
-            API_ENDPOINTS.OBTENER_TAREAS,
-            { headers: this.headers }
+            API_ENDPOINTS.OBTENER_TAREAS
         ).pipe(
             catchError((error) => handleHttpError(error))
         );
@@ -75,8 +69,7 @@ export class TareasService {
     actualizarTarea(tarea: ActualizarTareaRequest): Observable<ApiResponse> {
         return this.http.put<ApiResponse>(
             API_ENDPOINTS.ACTUALIZAR_TAREA,
-            tarea,
-            { headers: this.headers }
+            tarea
         ).pipe(
             catchError((error) => handleHttpError(error))
         );
@@ -94,10 +87,7 @@ export class TareasService {
         return this.http.request<ApiResponse>(
             "DELETE",
             API_ENDPOINTS.ELIMINAR_TAREA,
-            {
-                headers: this.headers,
-                body
-            }
+            { body }
         ).pipe(
             catchError((error) => handleHttpError(error))
         );

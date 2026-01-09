@@ -4,10 +4,15 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "start:local": "ng serve --configuration development",
+    "build": "ng build --configuration production",
+    "build:prod": "ng build --configuration production",
+    "build:local": "ng build --configuration development",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "deploy": "npm run build:prod && firebase deploy --only hosting",
+    "deploy:preview": "npm run build:prod && firebase hosting:channel:deploy preview"
   },
   "private": true,
   "dependencies": {
@@ -22,6 +27,7 @@
     "@angular/platform-browser": "^17.3.0",
     "@angular/platform-browser-dynamic": "^17.3.0",
     "@angular/router": "^17.3.0",
+    "bootstrap": "^5.3.8",
     "firebase": "^12.7.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

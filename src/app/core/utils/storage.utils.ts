@@ -72,4 +72,34 @@ export function hasAuthToken(): boolean {
  */
 export function clearAuthData(): void {
     removeFromSessionStorage(STORAGE_KEYS.AUTH_TOKEN);
+    removeFromSessionStorage(STORAGE_KEYS.USER_DATA);
+}
+
+/**
+ * Guarda los datos del usuario
+ * @param userData - Datos del usuario a guardar
+ */
+export function saveUserData(userData: unknown): void {
+    try {
+        const jsonData = JSON.stringify(userData);
+        saveToSessionStorage(STORAGE_KEYS.USER_DATA, jsonData);
+    } catch (error) {
+        // Error manejado silenciosamente
+    }
+}
+
+/**
+ * Obtiene los datos del usuario
+ * @returns Datos del usuario o null
+ */
+export function getUserData<T = unknown>(): T | null {
+    try {
+        const jsonData = getFromSessionStorage(STORAGE_KEYS.USER_DATA);
+        if (!jsonData) {
+            return null;
+        }
+        return JSON.parse(jsonData) as T;
+    } catch (error) {
+        return null;
+    }
 }

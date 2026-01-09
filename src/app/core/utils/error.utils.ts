@@ -49,13 +49,3 @@ export function handleHttpError(error: HttpErrorResponse): Observable<never> {
         mensaje: errorMessage
     } as ApiError));
 }
-
-/**
- * Verifica si un error es de sesión expirada
- * @param error - Error a verificar
- * @returns true si es error de sesión
- */
-export function isSessionExpiredError(error: ApiError): boolean {
-    return error.mensaje.toLowerCase().includes("token")
-        || error.mensaje.toLowerCase().includes("autenticación");
-}

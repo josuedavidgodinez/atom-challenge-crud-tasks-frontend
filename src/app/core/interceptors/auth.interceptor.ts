@@ -28,47 +28,22 @@ export class AuthInterceptor implements HttpInterceptor {
      * @returns Observable del evento HTTP
      */
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        // Obtener token
         const token = getAuthToken();
 
-        // Si existe token, agregarlo al header Authorization
-        let modifiedRequest = request;
-        if (token) {
-            modifiedRequest = AuthInterceptor.addTokenToRequest(request, token);
-        }
+        // Agregar token si existe
+        const modifiedRequest = token
+            ? request.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+            : request;
 
-        // Continuar con la petición y manejar errores de autenticación
+        // Manejar errores 401
         return next.handle(modifiedRequest).pipe(
             catchError((error: HttpErrorResponse) => {
-                // Si es error 401 (No autorizado), limpiar sesión y redirigir a login
                 if (error.status === 401) {
-                    this.handleUnauthorizedError();
+                    clearAuthData();
+                    this.router.navigate(["/login"]);
                 }
                 return throwError(() => error);
             })
         );
-    }
-
-    /**
-     * Agrega el token Bearer al header de la petición
-     * @param request - Petición HTTP original
-     * @param token - Token de autenticación
-     * @returns Petición HTTP clonada con el token
-     */
-    private static addTokenToRequest(request: HttpRequest<any>, token: string): HttpRequest<any> {
-        return request.clone({
-            setHeaders: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-    }
-
-    /**
-     * Maneja errores de autorización
-     * Limpia la sesión y redirige al login
-     */
-    private handleUnauthorizedError(): void {
-        clearAuthData();
-        this.router.navigate(["/login"]);
     }
 }
