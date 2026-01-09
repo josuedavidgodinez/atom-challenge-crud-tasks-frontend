@@ -64,12 +64,14 @@
 
         <!-- Loading State -->
         <div *ngIf="loading" class="row">
-            <div class="col-12 text-center py-5">
-                <mat-spinner
-                    diameter="50"
-                    aria-label="Cargando tareas..."
-                ></mat-spinner>
-                <p class="mt-3 text-muted">Cargando tareas...</p>
+            <div class="col-12">
+                <div class="loading-state">
+                    <mat-spinner
+                        diameter="50"
+                        aria-label="Cargando tareas..."
+                    ></mat-spinner>
+                    <p class="loading-text">Cargando tareas...</p>
+                </div>
             </div>
         </div>
 

@@ -105,6 +105,20 @@
         }
     }
 
+    .loading-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: $spacing-xl 0;
+
+        .loading-text {
+            margin-top: $spacing-md;
+            color: $text-secondary;
+            font-size: $font-size-body;
+        }
+    }
+
     .alert {
         display: flex;
         align-items: center;
