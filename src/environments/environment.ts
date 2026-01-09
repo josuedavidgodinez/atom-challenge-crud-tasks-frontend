@@ -12,7 +12,8 @@ export const environment = {
         eliminarTarea: "https://eliminartarea-dpnddtqc3a-uc.a.run.app"
     },
     firebase: {
-        apiKey: "YOUR_FIREBASE_API_KEY_HERE",
+        // Placeholder para desarrollo - usa environment.local.ts con tu API key real
+        apiKey: "__FIREBASE_API_KEY__",
         signInWithCustomTokenUrl: "https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken"
     }
 };
