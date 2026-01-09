@@ -77,8 +77,24 @@ export class TareaDialogComponent implements OnInit {
      */
     private setupFormChangeDetection(): void {
         this.tareaForm.valueChanges.subscribe(() => {
-            this.formChanged = this.tareaForm.dirty;
+            this.formChanged = this.tareaForm.dirty || this.hasFormChanged();
         });
+    }
+
+    /**
+     * Verifica si el formulario ha cambiado comparando con los valores originales
+     */
+    private hasFormChanged(): boolean {
+        if (!this.isEditMode || !this.data.tarea) {
+            return false;
+        }
+
+        const currentValues = this.tareaForm.value;
+        const originalValues = this.data.tarea;
+
+        return currentValues.titulo !== originalValues.titulo
+            || currentValues.descripcion !== originalValues.descripcion
+            || currentValues.estado !== originalValues.estado;
     }
 
     /**
@@ -182,6 +198,9 @@ export class TareaDialogComponent implements OnInit {
      * Retorna true si se puede guardar (formulario válido y cambiado o modo creación)
      */
     get canSave(): boolean {
-        return this.tareaForm.valid && (this.formChanged || !this.isEditMode);
+        if (!this.tareaForm.valid) {
+            return false;
+        }
+        return !this.isEditMode || this.hasFormChanged();
     }
 }

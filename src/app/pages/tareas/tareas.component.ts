@@ -15,7 +15,7 @@ import { TareaCardEvent } from "../../components/tarea-card/tarea-card.interface
 import { TareaDialogComponent } from "../../components/tarea-dialog/tarea-dialog.component";
 import { TareaDialogData, TareaDialogResult } from "../../components/tarea-dialog/tarea-dialog.interface";
 import { Usuario } from "../../core/interfaces/api-response.interface";
-import { Tarea } from "../../core/interfaces/tarea.interface";
+import { EstadoTarea, Tarea } from "../../core/interfaces/tarea.interface";
 import { AuthService } from "../../core/services/auth.service";
 import { TareasService } from "../../core/services/tareas.service";
 
@@ -152,7 +152,7 @@ export class TareasComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Maneja la creación de una tarea
+     * Maneja la creación de una tarea (con actualización optimista)
      */
     private handleCreateTarea(tareaData: Partial<Tarea>): void {
         if (!tareaData.titulo || !tareaData.descripcion || !tareaData.estado) {
@@ -160,7 +160,23 @@ export class TareasComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this.loading = true;
+        // Actualización optimista: agregar tarea temporalmente
+        const tempId = `temp-${Date.now()}`;
+        const tempTarea: Tarea = {
+            id: tempId,
+            titulo: tareaData.titulo,
+            descripcion: tareaData.descripcion,
+            estado: tareaData.estado,
+            fecha_de_creacion: {
+                _seconds: Math.floor(Date.now() / 1000),
+                _nanoseconds: 0
+            }
+        };
+
+        this.tareas = [tempTarea, ...this.tareas];
+        this.showMessage("Creando tarea...", "info");
+
+        // Crear en backend
         this.tareasService.crearTarea({
             titulo: tareaData.titulo,
             descripcion: tareaData.descripcion,
@@ -169,16 +185,19 @@ export class TareasComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (response) => {
-                    this.loading = false;
                     if (response.exito) {
+                        // Recargar para obtener el ID real del servidor
+                        this.loadTareasInBackground();
                         this.showMessage("Tarea creada exitosamente", "success");
-                        this.loadTareas();
                     } else {
+                        // Revertir cambio optimista
+                        this.tareas = this.tareas.filter((t) => t.id !== tempId);
                         this.showMessage(response.mensaje || "Error al crear la tarea", "error");
                     }
                 },
                 error: (error) => {
-                    this.loading = false;
+                    // Revertir cambio optimista
+                    this.tareas = this.tareas.filter((t) => t.id !== tempId);
                     this.showMessage(error.mensaje || "Error al crear la tarea", "error");
                 }
             });
@@ -215,7 +234,7 @@ export class TareasComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Maneja la actualización de una tarea
+     * Maneja la actualización de una tarea (con actualización optimista)
      */
     private handleUpdateTarea(tareaData: Partial<Tarea>): void {
         if (!tareaData.id || !tareaData.titulo || !tareaData.descripcion || !tareaData.estado) {
@@ -223,7 +242,25 @@ export class TareasComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this.loading = true;
+        // Guardar estado anterior para rollback
+        const index = this.tareas.findIndex((t) => t.id === tareaData.id);
+        if (index === -1) {
+            this.showMessage("Tarea no encontrada", "error");
+            return;
+        }
+
+        const oldTarea = { ...this.tareas[index] };
+
+        // Actualización optimista
+        this.tareas[index] = {
+            ...this.tareas[index],
+            titulo: tareaData.titulo,
+            descripcion: tareaData.descripcion,
+            estado: tareaData.estado
+        };
+        this.tareas = [...this.tareas]; // Trigger change detection
+
+        // Actualizar en backend
         this.tareasService.actualizarTarea({
             tareaId: tareaData.id,
             titulo: tareaData.titulo,
@@ -233,16 +270,19 @@ export class TareasComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (response) => {
-                    this.loading = false;
                     if (response.exito) {
                         this.showMessage("Tarea actualizada exitosamente", "success");
-                        this.loadTareas();
                     } else {
+                        // Revertir cambio optimista
+                        this.tareas[index] = oldTarea;
+                        this.tareas = [...this.tareas];
                         this.showMessage(response.mensaje || "Error al actualizar la tarea", "error");
                     }
                 },
                 error: (error) => {
-                    this.loading = false;
+                    // Revertir cambio optimista
+                    this.tareas[index] = oldTarea;
+                    this.tareas = [...this.tareas];
                     this.showMessage(error.mensaje || "Error al actualizar la tarea", "error");
                 }
             });
@@ -279,31 +319,57 @@ export class TareasComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Elimina una tarea
+     * Elimina una tarea (con actualización optimista)
      */
     private deleteTarea(tareaId: string): void {
-        this.loading = true;
+        // Guardar tarea para rollback
+        const index = this.tareas.findIndex((t) => t.id === tareaId);
+        if (index === -1) {
+            this.showMessage("Tarea no encontrada", "error");
+            return;
+        }
+
+        const deletedTarea = { ...this.tareas[index] };
+
+        // Actualización optimista: eliminar de la UI
+        this.tareas = this.tareas.filter((t) => t.id !== tareaId);
+        this.showMessage("Eliminando tarea...", "info");
+
+        // Eliminar en backend
         this.tareasService.eliminarTarea(tareaId)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (response) => {
-                    this.loading = false;
                     if (response.exito) {
                         this.showMessage("Tarea eliminada exitosamente", "success");
-                        this.loadTareas();
                     } else {
+                        // Revertir cambio optimista
+                        this.tareas = [...this.tareas, deletedTarea].sort((a, b) => {
+                            // eslint-disable-next-line no-underscore-dangle
+                            const aTime = a.fecha_de_creacion?._seconds || 0;
+                            // eslint-disable-next-line no-underscore-dangle
+                            const bTime = b.fecha_de_creacion?._seconds || 0;
+                            return bTime - aTime;
+                        });
                         this.showMessage(response.mensaje || "Error al eliminar la tarea", "error");
                     }
                 },
                 error: (error) => {
-                    this.loading = false;
+                    // Revertir cambio optimista
+                    this.tareas = [...this.tareas, deletedTarea].sort((a, b) => {
+                        // eslint-disable-next-line no-underscore-dangle
+                        const aTime = a.fecha_de_creacion?._seconds || 0;
+                        // eslint-disable-next-line no-underscore-dangle
+                        const bTime = b.fecha_de_creacion?._seconds || 0;
+                        return bTime - aTime;
+                    });
                     this.showMessage(error.mensaje || "Error al eliminar la tarea", "error");
                 }
             });
     }
 
     /**
-     * Maneja el cambio de estado de una tarea
+     * Maneja el cambio de estado de una tarea (con actualización optimista)
      */
     private handleToggleEstado(tarea: Tarea): void {
         if (!tarea.id) {
@@ -311,9 +377,23 @@ export class TareasComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const nuevoEstado = tarea.estado === "P" ? "C" : "P";
+        const index = this.tareas.findIndex((t) => t.id === tarea.id);
+        if (index === -1) {
+            this.showMessage("Tarea no encontrada", "error");
+            return;
+        }
 
-        this.loading = true;
+        const oldEstado = tarea.estado;
+        const nuevoEstado: EstadoTarea = tarea.estado === "P" ? "C" : "P";
+
+        // Actualización optimista
+        this.tareas[index] = {
+            ...this.tareas[index],
+            estado: nuevoEstado
+        };
+        this.tareas = [...this.tareas]; // Trigger change detection
+
+        // Actualizar en backend
         this.tareasService.actualizarTarea({
             tareaId: tarea.id,
             titulo: tarea.titulo,
@@ -323,19 +403,28 @@ export class TareasComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (response) => {
-                    this.loading = false;
                     if (response.exito) {
                         const mensaje = nuevoEstado === "C"
                             ? "Tarea marcada como completada"
                             : "Tarea marcada como pendiente";
                         this.showMessage(mensaje, "success");
-                        this.loadTareas();
                     } else {
+                        // Revertir cambio optimista
+                        this.tareas[index] = {
+                            ...this.tareas[index],
+                            estado: oldEstado
+                        };
+                        this.tareas = [...this.tareas];
                         this.showMessage(response.mensaje || "Error al actualizar el estado", "error");
                     }
                 },
                 error: (error) => {
-                    this.loading = false;
+                    // Revertir cambio optimista
+                    this.tareas[index] = {
+                        ...this.tareas[index],
+                        estado: oldEstado
+                    };
+                    this.tareas = [...this.tareas];
                     this.showMessage(error.mensaje || "Error al actualizar el estado", "error");
                 }
             });
@@ -385,5 +474,26 @@ export class TareasComponent implements OnInit, OnDestroy {
     // eslint-disable-next-line class-methods-use-this
     trackByTareaId(_index: number, tarea: Tarea): string | undefined {
         return tarea.id;
+    }
+
+    /**
+     * Carga las tareas en background sin mostrar el loader bloqueante
+     * Se usa después de actualizaciones optimistas para sincronizar con el backend
+     * @private
+     */
+    private loadTareasInBackground(): void {
+        this.tareasService.obtenerTareas()
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+                next: (response) => {
+                    if (response.exito && response.datos) {
+                        this.tareas = response.datos;
+                    }
+                },
+                error: () => {
+                    // Error silencioso - la UI ya muestra el estado optimista
+                    // Si hay un error crítico, se mostrará en la próxima carga manual
+                }
+            });
     }
 }
