@@ -1,36 +1,120 @@
-# ATOM FE CHALLENGE TEMPLATE - ANGULAR
+# Atom Challenge - CRUD Tasks Frontend
 
-Este proyecto es una plantilla con lo necesario para comenzar a desarrollar el front-end de la aplicación de la prueba técnica de Atom. Se base en Angular con la versión 17.3.6.
-Se ha realizado la instalación y configuración de varias dependencias necesarias para el desarrollo de la aplicación, como por ejemplo: Angular Material.
+Aplicación web de gestión de tareas con Angular 17, Material Design y Firebase Authentication.
 
-## Instrucciones
-Siéntete libre de clonar este repositorio y utilizarlo como base para el desarrollo de la aplicación. Sigue las indicates de la prueba técnica para completar la aplicación y desarrolla como más te sientas cómodo.
+## 🚀 Stack
 
-De igual manera puedes documentar dentro de este archivo todo lo que deseas contar sobre tu desarrollo, como por ejemplo, decisiones de diseño, problemas encontrados, etc.
+- Angular 17 (Standalone Components) + Material Design
+- TypeScript + SCSS + RxJS
+- Firebase Auth + Cypress E2E
+- CI/CD con GitHub Actions
 
-## Comentarios sobre el desarrollo
-...
+## 🚀 Inicio Rápido
 
-## Development server
+```bash
+# Instalar
+npm install
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+# Desarrollo
+npm run start:local  # http://localhost:4200
 
-## Code scaffolding
+# Build producción
+npm run build:prod
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+# Tests E2E
+npm run test:e2e
+```
 
-## Build
+## 📱 Funcionalidades
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- ✅ Autenticación con correo (Firebase Custom Tokens)
+- ✅ CRUD completo de tareas
+- ✅ Actualización optimista (UI instantánea)
+- ✅ Estados: Pendiente / Completada
+- ✅ Responsive design (Mobile-first)
+- ✅ Notificaciones (Material Snackbar)
 
-## Running unit tests
+## 🏗️ Arquitectura
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```
+Clean Architecture - 4 Capas
+Pages → Components → Services → Core
+(UI)    (Reutiliz.)  (Lógica)  (Utils)
+```
 
-## Running end-to-end tests
+**Componentes principales:**
+- `TareasComponent` (Página principal)
+- `LoginComponent` (Autenticación)
+- `TareaCardComponent` (Tarjeta de tarea)
+- `TareaDialogComponent` (Crear/Editar)
+- `ConfirmDialogComponent` (Confirmaciones)
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## 🧪 Testing
 
-## Further help
+```bash
+npm run test:e2e        # Cypress headless
+npm run test:e2e:open   # Cypress UI
+npm run test:e2e:ci     # CI/CD
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+**Cobertura:** Flow completo de usuario (login → crear → editar → eliminar)
+
+## 🚢 Deploy
+
+```bash
+npm run deploy  # Manual a Firebase Hosting
+```
+
+Push a `main` → Deploy automático vía GitHub Actions
+
+**URL Producción:** https://atom-challenge-crud-tasks.web.app
+
+## 📚 Documentación
+
+En `documentacion/`:
+
+- [configuracion.md](documentacion/configuracion.md) - Setup y desarrollo
+- [arquitectura.md](documentacion/arquitectura.md) - Estructura y patrones
+- [componentes.md](documentacion/componentes.md) - Componentes principales
+- [servicios.md](documentacion/servicios.md) - Servicios y guards
+
+## 🛠️ Scripts
+
+```bash
+npm run start              # Dev (producción)
+npm run start:local        # Dev (local)
+npm run build:prod         # Build producción
+npm run build:local        # Build desarrollo
+npm run test:e2e           # Tests E2E
+npm run lint               # ESLint
+npm run deploy             # Deploy Firebase
+```
+
+## 🔐 Variables de Entorno
+
+Configurar en Firebase Console:
+- `FIREBASE_API_KEY` (production)
+
+Locales: `environment.local.ts` (no versionado)
+
+## 📦 Estructura
+
+```
+src/
+├── app/
+│   ├── components/     # Componentes reutilizables
+│   ├── pages/          # Páginas (Login, Tareas)
+│   └── core/           # Servicios, guards, utils
+├── assets/
+│   └── styles/         # Variables SCSS globales
+└── environments/       # Configuración por entorno
+```
+
+## 🎯 Optimizaciones
+
+- ✅ Tree shaking automático
+- ✅ Minificación en producción
+- ✅ Actualización optimista (UX)
+- ✅ Lazy loading de rutas
+- ✅ Standalone components (menor bundle)
+- ✅ OnPush change detection (performance)
