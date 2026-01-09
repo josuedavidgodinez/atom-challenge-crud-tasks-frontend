@@ -12,8 +12,8 @@ export const environment = {
         eliminarTarea: "https://eliminartarea-dpnddtqc3a-uc.a.run.app"
     },
     firebase: {
-        // Este valor se inyecta en tiempo de build desde GitHub Secrets
-        apiKey: "${FIREBASE_API_KEY}",
+        // Placeholder - se reemplaza en el pipeline de CD
+        apiKey: "__FIREBASE_API_KEY__",
         signInWithCustomTokenUrl: "https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken"
     }
 };

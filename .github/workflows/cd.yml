@@ -36,6 +36,10 @@ jobs:
       - name: 📚 Install dependencies
         run: npm ci
 
+      - name: 🔑 Inject Firebase API Key
+        run: |
+          sed -i 's/__FIREBASE_API_KEY__/${{ secrets.FIREBASE_API_KEY }}/g' src/environments/environment.prod.ts
+
       - name: 🏗️ Build production
         run: npm run build:prod
 
