@@ -242,27 +242,33 @@ export class TareasComponent implements OnInit, OnDestroy {
             return;
         }
 
+        const tareaId = tareaData.id;
+
         // Guardar estado anterior para rollback
-        const index = this.tareas.findIndex((t) => t.id === tareaData.id);
-        if (index === -1) {
+        const currentIndex = this.tareas.findIndex((t) => t.id === tareaId);
+        if (currentIndex === -1) {
             this.showMessage("Tarea no encontrada", "error");
             return;
         }
 
-        const oldTarea = { ...this.tareas[index] };
+        const oldTarea = { ...this.tareas[currentIndex] };
 
-        // Actualización optimista
-        this.tareas[index] = {
-            ...this.tareas[index],
-            titulo: tareaData.titulo,
-            descripcion: tareaData.descripcion,
-            estado: tareaData.estado
-        };
-        this.tareas = [...this.tareas]; // Trigger change detection
+        // Actualización optimista usando map para crear nuevo array con nueva referencia de objeto
+        this.tareas = this.tareas.map((t) => {
+            if (t.id === tareaId) {
+                return {
+                    ...t,
+                    titulo: tareaData.titulo!,
+                    descripcion: tareaData.descripcion!,
+                    estado: tareaData.estado!
+                };
+            }
+            return t;
+        });
 
         // Actualizar en backend
         this.tareasService.actualizarTarea({
-            tareaId: tareaData.id,
+            tareaId,
             titulo: tareaData.titulo,
             descripcion: tareaData.descripcion,
             estado: tareaData.estado
@@ -273,16 +279,14 @@ export class TareasComponent implements OnInit, OnDestroy {
                     if (response.exito) {
                         this.showMessage("Tarea actualizada exitosamente", "success");
                     } else {
-                        // Revertir cambio optimista
-                        this.tareas[index] = oldTarea;
-                        this.tareas = [...this.tareas];
+                        // Revertir cambio optimista usando ID
+                        this.tareas = this.tareas.map((t) => (t.id === tareaId ? oldTarea : t));
                         this.showMessage(response.mensaje || "Error al actualizar la tarea", "error");
                     }
                 },
                 error: (error) => {
-                    // Revertir cambio optimista
-                    this.tareas[index] = oldTarea;
-                    this.tareas = [...this.tareas];
+                    // Revertir cambio optimista usando ID
+                    this.tareas = this.tareas.map((t) => (t.id === tareaId ? oldTarea : t));
                     this.showMessage(error.mensaje || "Error al actualizar la tarea", "error");
                 }
             });
@@ -377,8 +381,9 @@ export class TareasComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const index = this.tareas.findIndex((t) => t.id === tarea.id);
-        if (index === -1) {
+        const tareaId = tarea.id;
+        const currentIndex = this.tareas.findIndex((t) => t.id === tareaId);
+        if (currentIndex === -1) {
             this.showMessage("Tarea no encontrada", "error");
             return;
         }
@@ -386,16 +391,12 @@ export class TareasComponent implements OnInit, OnDestroy {
         const oldEstado = tarea.estado;
         const nuevoEstado: EstadoTarea = tarea.estado === "P" ? "C" : "P";
 
-        // Actualización optimista
-        this.tareas[index] = {
-            ...this.tareas[index],
-            estado: nuevoEstado
-        };
-        this.tareas = [...this.tareas]; // Trigger change detection
+        // Actualización optimista usando map para crear nuevas referencias
+        this.tareas = this.tareas.map((t) => (t.id === tareaId ? { ...t, estado: nuevoEstado } : t));
 
         // Actualizar en backend
         this.tareasService.actualizarTarea({
-            tareaId: tarea.id,
+            tareaId,
             titulo: tarea.titulo,
             descripcion: tarea.descripcion,
             estado: nuevoEstado
@@ -409,22 +410,14 @@ export class TareasComponent implements OnInit, OnDestroy {
                             : "Tarea marcada como pendiente";
                         this.showMessage(mensaje, "success");
                     } else {
-                        // Revertir cambio optimista
-                        this.tareas[index] = {
-                            ...this.tareas[index],
-                            estado: oldEstado
-                        };
-                        this.tareas = [...this.tareas];
+                        // Revertir cambio optimista usando ID
+                        this.tareas = this.tareas.map((t) => (t.id === tareaId ? { ...t, estado: oldEstado } : t));
                         this.showMessage(response.mensaje || "Error al actualizar el estado", "error");
                     }
                 },
                 error: (error) => {
-                    // Revertir cambio optimista
-                    this.tareas[index] = {
-                        ...this.tareas[index],
-                        estado: oldEstado
-                    };
-                    this.tareas = [...this.tareas];
+                    // Revertir cambio optimista usando ID
+                    this.tareas = this.tareas.map((t) => (t.id === tareaId ? { ...t, estado: oldEstado } : t));
                     this.showMessage(error.mensaje || "Error al actualizar el estado", "error");
                 }
             });
