@@ -56,3 +56,8 @@ Thumbs.db
 firebase-debug.log
 firestore-debug.log
 ui-debug.log
+
+# Cypress
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/

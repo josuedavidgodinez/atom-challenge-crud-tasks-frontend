@@ -1,0 +1,19 @@
+# Archivos y carpetas ignorados por ESLint
+
+# Cypress
+cypress.config.ts
+cypress/**/*
+
+# Build outputs
+dist/
+public/
+.angular/
+
+# Node modules
+node_modules/
+
+# Coverage
+coverage/
+
+# Environment files
+*.local.ts

@@ -1,0 +1,10 @@
+{
+  "extends": ["../.eslintrc.json"],
+  "rules": {
+    "@typescript-eslint/quotes": "off",
+    "@typescript-eslint/indent": "off",
+    "quotes": "off",
+    "indent": "off",
+    "@typescript-eslint/no-namespace": "off"
+  }
+}
