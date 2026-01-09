@@ -19,5 +19,4 @@ export * from "./services/tareas.service";
 
 // Utils
 export * from "./utils/error.utils";
-export * from "./utils/format.utils";
 export * from "./utils/storage.utils";

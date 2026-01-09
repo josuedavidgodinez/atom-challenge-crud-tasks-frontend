@@ -32,17 +32,7 @@ export const STORAGE_KEYS = {
  * Mensajes de error estandarizados
  */
 export const ERROR_MESSAGES = {
-    NO_TOKEN: "No hay token de autenticación",
     INVALID_TOKEN: "Token de autenticación inválido",
     NETWORK_ERROR: "Error de conexión. Verifica tu conexión a internet",
-    UNKNOWN_ERROR: "Ha ocurrido un error inesperado",
-    SESSION_EXPIRED: "Tu sesión ha expirado. Por favor, inicia sesión nuevamente"
-} as const;
-
-/**
- * Estados de tarea disponibles
- */
-export const ESTADOS_TAREA = {
-    PENDIENTE: "P",
-    COMPLETADA: "C"
+    UNKNOWN_ERROR: "Ha ocurrido un error inesperado"
 } as const;

@@ -1,8 +1,5 @@
 /**
  * Test E2E: Flujo Completo usando Comandos Personalizados
- * 
- * Este test utiliza los comandos personalizados de Cypress
- * para una sintaxis más limpia y reutilizable.
  */
 
 describe('Flujo Completo con Comandos Personalizados', () => {

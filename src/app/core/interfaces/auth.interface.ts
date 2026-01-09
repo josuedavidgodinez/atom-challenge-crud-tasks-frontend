@@ -21,11 +21,3 @@ export interface LoginResponse extends ApiResponse {
     token: string;
     usuario: Usuario;
 }
-
-/**
- * Datos del usuario autenticado almacenados en storage
- */
-export interface AuthData {
-    token: string;
-    usuario: Usuario;
-}

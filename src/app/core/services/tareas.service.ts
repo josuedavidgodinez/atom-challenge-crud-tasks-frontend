@@ -15,14 +15,6 @@ import { handleHttpError } from "../utils/error.utils";
 
 /**
  * Servicio de tareas
- * Responsabilidades:
- * - CRUD completo de tareas
- * - Gestión de peticiones HTTP a los endpoints de tareas
- *
- * Siguiendo principios SOLID:
- * - SRP: Responsabilidad única de gestión de tareas
- * - OCP: Abierto para extensión (agregar más métodos), cerrado para modificación
- * - DIP: Depende de abstracciones (HttpClient, StorageService)
  */
 @Injectable({
     providedIn: "root"

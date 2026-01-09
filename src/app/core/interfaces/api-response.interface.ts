@@ -1,6 +1,5 @@
 /**
  * Interfaz base para todas las respuestas del API
- * Siguiendo el principio DRY - todas las respuestas tienen esta estructura
  */
 export interface ApiResponse<T = any> {
     exito: boolean;
